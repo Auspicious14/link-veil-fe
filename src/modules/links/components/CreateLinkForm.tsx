@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useMutation } from "@tanstack/react-query";
-import api from "@/src/lib/axios";
+import api from "@/lib/axios";
 import { toast } from "sonner";
 
 const formSchema = z.object({
