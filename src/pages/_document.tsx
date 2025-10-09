@@ -4,11 +4,8 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <title>Image Generator</title>
-      <meta
-        name="description"
-        content="Generate Realistic images with prompt"
-      />
+      <title>Link Veil</title>
+      <meta name="description" content="Share private urls with ease" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       {/* <meta
         http-equiv="Content-Security-Policy"

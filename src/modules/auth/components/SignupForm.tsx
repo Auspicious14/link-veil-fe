@@ -17,8 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import api from "@/src/lib/axios";
-import { useAuth } from "@/src/hooks/useAuth";
+import api from "@/lib/axios";
+import { useAuth } from "@/hooks/useAuth";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
