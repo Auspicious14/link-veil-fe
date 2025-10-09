@@ -24,7 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "@/src/lib/axios";
+import api from "@/lib/axios";
 import { ShareModal } from "./ShareModal";
 
 interface LinkCardProps {
