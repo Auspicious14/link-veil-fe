@@ -9,8 +9,17 @@ import api from "@/lib/axios";
 import ProtectedRoute from "@/components/layout/ProtectedRoute";
 
 const fetchLinks = async (): Promise<LinkType[]> => {
-  const { data } = await api.get("/links");
-  return data;
+  const response = await api.get("/links");
+  const links = response.data.data || [];
+  
+  // Transform backend data to match frontend expectations
+  return links.map((link: LinkType) => ({
+    ...link,
+    destinationUrl: link.url,
+    shortUrl: link.shortId,
+    // Calculate pending request count if not provided
+    pendingRequestCount: link.pendingRequestCount || 0
+  }));
 };
 
 function DashboardContent() {

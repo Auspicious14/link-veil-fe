@@ -3,12 +3,28 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { Link as LinkType } from "@/modules/links/types";
+import { AccessRequestForm } from "@/modules/links/components/AccessRequestForm";
 import api from "@/lib/axios";
 import { toast } from "sonner";
 
 const fetchLink = async (id: string): Promise<LinkType> => {
-  const { data } = await api.get(`/links/${id}`);
-  return data;
+  try {
+    const response = await api.get(`/links/${id}`);
+    // Handle the API response structure
+    const linkData = response.data.data || response.data;
+    
+    // Transform backend data to match frontend expectations
+    return {
+      ...linkData,
+      destinationUrl: linkData.url,
+      shortUrl: linkData.shortId,
+      // For the public link page, we determine if approval is required based on visibility
+      requireApproval: linkData.visibility === 'request'
+    };
+  } catch (error) {
+    console.error('Error fetching link:', error);
+    throw error;
+  }
 };
 
 export default function PublicLinkPage() {
@@ -37,12 +53,16 @@ export default function PublicLinkPage() {
   });
 
   useEffect(() => {
-    if (link && !link.requireApproval) {
-      // If no approval is required, redirect immediately
-      window.location.href = link.destinationUrl;
+    if (!link) return;
+    
+    // If link is public, redirect immediately
+    if (link.visibility === 'public') {
+      window.location.href = link.destinationUrl || link.url;
+      return;
     }
-    // A real implementation would also check if the user is already approved.
-    // For this implementation, we assume if requireApproval is true, the user needs to request access.
+    
+    // For private links, check if user is the owner (would require auth check)
+    // For request links, we'll show the request access UI
   }, [link]);
 
   if (isLoading) {
@@ -58,32 +78,47 @@ export default function PublicLinkPage() {
   }
 
   // If link is public, it would have already redirected via useEffect.
-  // This content is for private links.
-  if (!link.requireApproval) {
-    return <div className="text-center py-20">Redirecting...</div>
+  // This content is for private or request-based links.
+  if (link.visibility === 'private') {
+    return (
+      <div className="container mx-auto flex items-center justify-center min-h-[calc(100vh-8rem)]">
+        <div className="text-center max-w-lg">
+          <h1 className="text-3xl font-bold tracking-tight mb-4">{link.title}</h1>
+          <p className="text-lg text-muted-foreground mb-4">This link is private and can only be accessed by the owner.</p>
+          <Button 
+            variant="outline" 
+            onClick={() => router.push('/')}
+          >
+            Return to Home
+          </Button>
+        </div>
+      </div>
+    );
   }
 
+  // For links that require approval
   return (
     <div className="container mx-auto flex items-center justify-center min-h-[calc(100vh-8rem)]">
-      <div className="text-center max-w-lg">
-        <h1 className="text-3xl font-bold tracking-tight mb-4">{link.title}</h1>
+      <div className="max-w-md w-full">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold tracking-tight mb-2">{link.title}</h1>
+          <p className="text-muted-foreground">This link requires approval from the creator.</p>
+        </div>
 
         {requestAccessMutation.isSuccess ? (
-          <div>
+          <div className="text-center p-6 border rounded-lg bg-muted/50">
             <p className="text-lg text-green-600 mb-4">Request Sent!</p>
             <p className="text-muted-foreground">You will be notified once the creator approves your request.</p>
           </div>
         ) : (
-          <div>
-            <p className="text-lg text-muted-foreground mb-8">This link is private and requires approval from the creator.</p>
-            <Button
-              size="lg"
-              onClick={() => requestAccessMutation.mutate()}
-              disabled={requestAccessMutation.isPending}
-            >
-              {requestAccessMutation.isPending ? "Requesting..." : "Request Access"}
-            </Button>
-          </div>
+          <AccessRequestForm 
+            link={link} 
+            onRequestSubmitted={() => {
+              // Refresh the query to get updated status
+              requestAccessMutation.reset();
+              requestAccessMutation.mutate();
+            }} 
+          />
         )}
       </div>
     </div>

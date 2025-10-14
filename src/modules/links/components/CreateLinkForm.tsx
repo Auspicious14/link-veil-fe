@@ -23,9 +23,18 @@ import { toast } from "sonner";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required." }),
-  destinationUrl: z.string().url({ message: "Please enter a valid URL." }),
-  description: z.string().optional(),
-  requireApproval: z.boolean(),
+  url: z.string().url({ message: "Please enter a valid URL." }),
+  visibility: z.enum(['public', 'request', 'private']).default('public'),
+  approvalMode: z.enum(['manual', 'auto', 'domain']).default('manual'),
+  approvedDomain: z.string().optional(),
+}).refine(data => {
+  if (data.approvalMode === 'domain') {
+    return !!data.approvedDomain && data.approvedDomain.length > 0;
+  }
+  return true;
+}, {
+  message: "Approved domain is required when domain approval mode is selected",
+  path: ["approvedDomain"],
 });
 
 export function CreateLinkForm() {
@@ -34,9 +43,10 @@ export function CreateLinkForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      destinationUrl: "",
-      description: "",
-      requireApproval: true,
+      url: "",
+      visibility: "request",
+      approvalMode: "manual",
+      approvedDomain: "",
     },
   });
 
@@ -84,7 +94,7 @@ export function CreateLinkForm() {
         />
         <FormField
           control={form.control}
-          name="destinationUrl"
+          name="url"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Destination URL</FormLabel>
@@ -102,7 +112,7 @@ export function CreateLinkForm() {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
@@ -118,29 +128,77 @@ export function CreateLinkForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
-          name="requireApproval"
+          name="visibility"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Require Approval</FormLabel>
-                <FormDescription>
-                  If enabled, you must approve users before they can access the
-                  link.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={mutation.isPending}
-                />
-              </FormControl>
+            <FormItem className="flex flex-col">
+              <FormLabel>Visibility</FormLabel>
+              <select
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                {...field}
+                disabled={mutation.isPending}
+              >
+                <option value="public">Public (Anyone can access)</option>
+                <option value="request">Request (Users must request access)</option>
+                <option value="private">Private (Only you can access)</option>
+              </select>
+              <FormDescription>
+                Control who can access your link.
+              </FormDescription>
+              <FormMessage />
             </FormItem>
           )}
         />
+        
+        {form.watch('visibility') === 'request' && (
+          <FormField
+            control={form.control}
+            name="approvalMode"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Approval Mode</FormLabel>
+                <select
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  {...field}
+                  disabled={mutation.isPending}
+                >
+                  <option value="manual">Manual (You approve each request)</option>
+                  <option value="auto">Auto (All requests are automatically approved)</option>
+                  <option value="domain">Domain (Approve based on email domain)</option>
+                </select>
+                <FormDescription>
+                  How access requests should be handled.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        
+        {form.watch('visibility') === 'request' && form.watch('approvalMode') === 'domain' && (
+          <FormField
+            control={form.control}
+            name="approvedDomain"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Approved Domain</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="example.com"
+                    {...field}
+                    disabled={mutation.isPending}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Users with email addresses from this domain will be automatically approved.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <Button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? "Creating..." : "Create Link"}
         </Button>

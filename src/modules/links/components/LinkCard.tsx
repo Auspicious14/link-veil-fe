@@ -36,8 +36,14 @@ export function LinkCard({ link }: LinkCardProps) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    setShortUrl(`${window.location.origin}/link/${link.shortUrl}`);
-  }, [link.shortUrl]);
+    // Use fullUrl from backend if available, otherwise construct from shortId/shortUrl
+    if (link.fullUrl) {
+      setShortUrl(link.fullUrl);
+    } else {
+      const shortUrlParam = link.shortId || link.shortUrl;
+      setShortUrl(`${window.location.origin}/link/${shortUrlParam}`);
+    }
+  }, [link.shortId, link.shortUrl, link.fullUrl]);
 
   const copyToClipboard = () => {
     if (!shortUrl) return;
@@ -64,12 +70,12 @@ export function LinkCard({ link }: LinkCardProps) {
         <CardTitle>{link.title}</CardTitle>
         <CardDescription>
           <a
-            href={link.destinationUrl}
+            href={link.destinationUrl || link.url}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:underline"
           >
-            {link.destinationUrl}
+            {link.destinationUrl || link.url}
           </a>
         </CardDescription>
       </CardHeader>
@@ -93,7 +99,7 @@ export function LinkCard({ link }: LinkCardProps) {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-muted-foreground" />
-            <span>{link.pendingRequestCount} Pending Requests</span>
+            <span>{link.pendingRequestCount || 0} Pending Requests</span>
           </div>
           <div className="flex items-center gap-2">
             <BarChart className="h-4 w-4 text-muted-foreground" />
