@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import { Link as LinkType } from '../types';
+import { Link as LinkType } from "../types";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Globe, Lock, Clock } from 'lucide-react';
+} from "@/components/ui/card";
+import { Globe, Lock, Clock, Badge } from "lucide-react";
 
 interface AccessStatusProps {
   link: LinkType;
@@ -18,47 +17,52 @@ interface AccessStatusProps {
 export function AccessStatus({ link }: AccessStatusProps) {
   const getVisibilityDetails = () => {
     switch (link.visibility) {
-      case 'public':
+      case "public":
         return {
           icon: <Globe className="h-4 w-4" />,
-          label: 'Public',
-          description: 'Anyone can access this link without approval.',
-          color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+          label: "Public",
+          description: "Anyone can access this link without approval.",
+          color:
+            "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
         };
-      case 'private':
+      case "private":
         return {
           icon: <Lock className="h-4 w-4" />,
-          label: 'Private',
-          description: 'Only you can access this link.',
-          color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+          label: "Private",
+          description: "Only you can access this link.",
+          color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
         };
-      case 'request':
+      case "request":
         return {
           icon: <Clock className="h-4 w-4" />,
-          label: 'Request Access',
+          label: "Request Access",
           description: getApprovalModeDescription(),
-          color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+          color:
+            "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
         };
       default:
         return {
           icon: <Globe className="h-4 w-4" />,
-          label: 'Public',
-          description: 'Anyone can access this link without approval.',
-          color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+          label: "Public",
+          description: "Anyone can access this link without approval.",
+          color:
+            "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
         };
     }
   };
 
   const getApprovalModeDescription = () => {
     switch (link.approvalMode) {
-      case 'manual':
-        return 'Users must request access and you must manually approve each request.';
-      case 'auto':
-        return 'Users must request access, but all requests are automatically approved.';
-      case 'domain':
-        return `Users must request access. Requests from ${link.approvedDomain || 'approved domains'} are automatically approved.`;
+      case "manual":
+        return "Users must request access and you must manually approve each request.";
+      case "auto":
+        return "Users must request access, but all requests are automatically approved.";
+      case "domain":
+        return `Users must request access. Requests from ${
+          link.approvedDomain || "approved domains"
+        } are automatically approved.`;
       default:
-        return 'Users must request access for this link.';
+        return "Users must request access for this link.";
     }
   };
 
@@ -69,21 +73,19 @@ export function AccessStatus({ link }: AccessStatusProps) {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Access Status</span>
-          <Badge className={color} variant="outline">
+          <Badge className={color}>
             <span className="flex items-center gap-1">
               {icon}
               {label}
             </span>
           </Badge>
         </CardTitle>
-        <CardDescription>
-          Control who can access your link
-        </CardDescription>
+        <CardDescription>Control who can access your link</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">{description}</p>
-        
-        {link.visibility === 'request' && (
+
+        {link.visibility === "request" && (
           <div className="mt-4 text-sm">
             <div className="font-medium">Current status:</div>
             <ul className="list-disc pl-5 mt-1 space-y-1 text-muted-foreground">
