@@ -1,29 +1,39 @@
-import Link from "next/link";
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "../ui/button";
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Button } from '../ui/button';
 
 export default function Navbar() {
-  const { isAuthenticated, user, logout } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  }, [router.asPath]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    router.push('/login');
+  };
 
   return (
-    <nav className="border-b">
-      <div className="container mx-auto flex h-16 items-center justify-between">
-        <Link href="/" className="font-bold text-lg">
+    <nav className="bg-white shadow-sm">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <Link href="/" className="text-xl font-bold">
           LinkVeil
         </Link>
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              <span className="text-sm text-muted-foreground">
-                Welcome, {user?.name}
-              </span>
-              <Link
-                href="/dashboard"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-              >
-                Dashboard
-              </Link>
-              <Button variant="outline" size="sm" onClick={logout}>
+              <Button asChild variant="ghost">
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/create">Create Link</Link>
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
                 Logout
               </Button>
             </>
