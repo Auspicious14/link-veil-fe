@@ -1,23 +1,19 @@
-import React from "react";
-import api from "@/lib/axios";
+import Loader from "@/components/common/loader";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 const Gateway = () => {
-  return <div>Generating your unique link...</div>;
+  const router = useRouter();
+  const { gatewayId } = router.query;
+
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (gatewayId && apiUrl) {
+      window.location.href = `${apiUrl}/links/g/${gatewayId}`;
+    }
+  }, [gatewayId]);
+
+  return <Loader />;
 };
 
 export default Gateway;
-
-export async function getServerSideProps(context: {
-  params: { gatewayId: string };
-}) {
-  const { gatewayId } = context.params;
-
-  const response = await api.get(`/links/g/${gatewayId}`);
-  const shortId = response?.data?.shortId;
-  return {
-    redirect: {
-      destination: `${process.env.NEXT_PUBLIC_API_URL}/l/${shortId}`,
-      permanent: false,
-    },
-  };
-}
