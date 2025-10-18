@@ -1,23 +1,10 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Navbar() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
-  }, [router.asPath]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsAuthenticated(false);
-    router.push("/login");
-  };
+  const { isAuthenticated, logout } = useAuth();
 
   return (
     <nav className="bg-white shadow-sm py-2">
@@ -39,7 +26,7 @@ export default function Navbar() {
               <Button asChild>
                 <Link href="/create">Create Link</Link>
               </Button>
-              <Button variant="outline" size="sm" onClick={handleLogout}>
+              <Button variant="outline" size="sm" onClick={logout}>
                 Logout
               </Button>
             </>

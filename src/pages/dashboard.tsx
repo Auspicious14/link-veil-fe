@@ -20,14 +20,7 @@ export default function DashboardPage() {
           setLinks(response.data.data);
         }
       } catch (error) {
-        toast.error("Failed to fetch links", {
-          description:
-            (error as any).response?.data?.message || "An error occurred.",
-        });
-        if ((error as any).response?.status === 401) {
-          localStorage.removeItem("token");
-          router.push("/login");
-        }
+        console.log(error);
       } finally {
         setIsLoading(false);
       }

@@ -42,7 +42,7 @@ export function LoginForm() {
     },
     onSuccess: (data) => {
       toast.success("Logged in successfully!");
-      login(data.data.token, data.data.user);
+      login(data.data.token, data.data.data);
       router.push("/dashboard");
     },
     onError: (error: any) => {

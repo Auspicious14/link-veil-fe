@@ -1,3 +1,4 @@
+import { deleteCookie, getCookie } from "@/helper";
 import axios from "axios";
 
 const axiosInstance = axios.create({
@@ -6,7 +7,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = getCookie("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,7 +24,7 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
+      deleteCookie("token", 1);
       // We can't use useRouter here, so we'll redirect from the component
       // that made the request.
     }

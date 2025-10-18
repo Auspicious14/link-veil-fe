@@ -1,15 +1,16 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { getCookie } from "@/helper";
 
 export default function IndexPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = getCookie("token");
     if (token) {
-      router.replace('/dashboard');
+      router.replace("/dashboard");
     } else {
-      router.replace('/login');
+      router.replace("/login");
     }
   }, [router]);
 
