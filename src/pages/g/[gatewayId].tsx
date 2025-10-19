@@ -9,7 +9,7 @@ const Gateway = () => {
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     if (gatewayId && apiUrl) {
-      window.location.href = `${apiUrl}/links/g/${gatewayId}`;
+      window.location.href = `${apiUrl}/api/links/g/${gatewayId}`;
     }
   }, [gatewayId]);
 
