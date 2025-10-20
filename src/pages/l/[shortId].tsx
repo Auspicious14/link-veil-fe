@@ -7,7 +7,7 @@ const LinkPage = () => {
   const { shortId } = router.query;
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const linkUrl = shortId && apiUrl ? `${apiUrl}/links/${shortId}` : "";
+  const linkUrl = shortId && apiUrl ? `${apiUrl}/api/links/${shortId}` : "";
 
   return (
     <div>
