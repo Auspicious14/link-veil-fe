@@ -6,7 +6,7 @@ export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
 
   return (
-    <nav className="border-b">
+    <nav className="border-b supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between">
         <Link href="/" className="font-bold text-lg">
           LinkVeil
@@ -29,11 +29,11 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Button asChild variant="ghost">
-                <Link href="/login">Log In</Link>
-              </Button>
               <Button asChild>
-                <Link href="/signup">Sign Up</Link>
+                <Link href="/signup">Get started</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/login">Sign in</Link>
               </Button>
             </>
           )}

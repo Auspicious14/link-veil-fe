@@ -7,27 +7,31 @@ import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
+import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
+    <><Head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </Head>
     <ThemeProvider
       attribute="class"
-      defaultTheme="system"
+      defaultTheme="dark"
       enableSystem
       disableTransitionOnChange
     >
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-grow">
-              <Component {...pageProps} />
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-grow">
+                <Component {...pageProps} />
+              </main>
+              <Footer />
+            </div>
+            <Toaster />
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider></>
   );
 }

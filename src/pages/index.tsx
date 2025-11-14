@@ -1,65 +1,93 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import type { IconType } from 'react-icons';
+import { FaShieldAlt, FaLink, FaEye } from 'react-icons/fa';
+import Background from 'public/assests/background.jpg'
+
+
+const FeatureCard = ({ icon: Icon, title, description }: { icon: IconType; title: string; description: string }) => (
+  <div className="p-6 bg-gray-800 rounded-xl  transition duration-300">
+    <div className="text-white mb-4">
+      <Icon className="h-8 w-8 text-muted-foreground" />
+    </div>
+    <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+    <p className="text-sm text-muted-foreground">{description}</p>
+  </div>
+);
+
+const backgroundStyle = {
+    backgroundImage: `url(${Background.src})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] text-center px-4">
-      <section className="py-20 md:py-32">
-        <div className="container mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4">
-            Share links privately. Approve who sees them.
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] text-center px-16 max-md:px-5 max-sm:px-2">
+      <section 
+      className="relative rounded-xl flex  items-center justify-center p-6 sm:p-12 text-white py-20  relative my-10 md:py-32"
+      style={backgroundStyle}
+    >
+        <div className="container bg-black/40 p-6 rounded-lg mx-auto text-center">
+          <h1 className="text-4xl md:text-3xl max-sm:text-2xl  font-bold tracking-tighter mb-4">
+            One link. Infinite unique destinations.
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Control who gets access to your shared content — no more chaotic DMs.
+          <p className="text-base max-sm:text-sm md:text-lg mt-6 max-w-4xl mx-auto mb-8 tracking-tighter">
+            Create a single gateway URL that generates unique cloaked links for each visitor, hiding the original destination while displaying its content via proxy.
           </p>
           <div className="flex justify-center gap-4">
             <Button asChild size="lg">
               <Link href="/dashboard">Get Started</Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="#features">See How It Works</Link>
-            </Button>
           </div>
         </div>
       </section>
 
-      <section id="features" className="py-20 md:py-32 bg-secondary w-full">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-12">
-            How It Works
+      <section id="features" className="py-10 md:py-30 w-full">
+        <div className="container mx-auto text-start">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-6">
+            Key Features
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            <div className="flex flex-col items-center gap-4">
-              <div className="bg-primary text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl">1</div>
-              <h3 className="font-bold text-xl">Create Link</h3>
-              <p className="text-muted-foreground">
-                Paste your destination URL and decide if you want to approve requests.
-              </p>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              <div className="bg-primary text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl">2</div>
-              <h3 className="font-bold text-xl">Share Link</h3>
-              <p className="text-muted-foreground">
-                Share the private LinkVeil URL with your audience.
-              </p>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-               <div className="bg-primary text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl">3</div>
-              <h3 className="font-bold text-xl">Approve Requests</h3>
-              <p className="text-muted-foreground">
-                Get notified of new access requests and approve them with one click.
-              </p>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-               <div className="bg-primary text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl">4</div>
-              <h3 className="font-bold text-xl">Track Access</h3>
-              <p className="text-muted-foreground">
-                See who has accessed your link and manage permissions.
-              </p>
-            </div>
-          </div>
+          <h4 className="text-bold tracking-tighter mb-12">
+            Explore the powerful capabilities of Link-veil that make it the ultimate link management solution
+          </h4>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          
+          <FeatureCard
+            icon={FaShieldAlt}
+            title="Enhanced Security"
+            description="Protect your original destination URL from being exposed to visitors, ensuring privacy and security."
+          />
+          
+          <FeatureCard
+            icon={FaLink}
+            title="Unique Cloaked Links"
+            description="Generate unique, cloaked links for each visitor, allowing for personalized experiences and detailed tracking."
+          />
+          
+          <FeatureCard
+            icon={FaEye}
+            title="Transparent Proxy"
+            description="Display the content of the original destination via a proxy, maintaining transparency while masking the actual URL."
+          />
+          
+        </div>
         </div>
       </section>
-    </div>
-  );
+
+      <section className="py-10 md:py-30 w-full">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-6">
+            Ready to transform your link sharing?
+          </h2>
+          <h4 className="text-bold tracking-tighter mb-12">
+            Join thousands of users who are already benefiting from Link-veil's innovative approach to link management
+          </h4>
+          <div className="flex justify-center mb-16">
+            <Button asChild size="lg">
+              <Link href="/dashboard">Get Started</Link>
+            </Button>
+          </div>
+        </section>  
+    </div>  
+  ); 
 }
