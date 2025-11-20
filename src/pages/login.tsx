@@ -28,41 +28,23 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    try {
-      const response = await api.post("/api/auth/login", values);
-      if (response.data.success) {
-        localStorage.setItem("token", response.data.token);
-        toast.success("Login Successful", {
-          description: "Redirecting to your dashboard...",
-        });
-        router.push("/dashboard");
-      } else {
-        toast.error("Login Failed", {
-          description: response.data.message || "An unknown error occurred.",
-        });
-      }
-    } catch (error) {
-      toast.error("An error occurred", {
-        description:
-          (error as any).response?.data?.message || "Please try again later.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  return <LoginForm />;
+  return (
+    <div className="container mx-auto flex items-center justify-center py-12 ">
+      <div className="mx-16 grid w-[500px] gap-6">
+        <div className="grid gap-2 text-center">
+          <h1 className="text-3xl font-bold">Sign In</h1>
+          <p className="text-balance max-sm:text-sm tracking-tighter text-muted-foreground">
+            Enter your email below to log in to your account
+          </p>
+        </div>
+        <LoginForm />
+        <div className="mt-4 text-center text-sm">
+          Don&apos;t have an account?{" "}
+          <Link href="/signup" className="underline">
+            Sign up
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }

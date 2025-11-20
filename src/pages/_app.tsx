@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import ProtectedRoute from "@/components/layout/ProtectedRoute";
 import { AuthProvider } from "@/hooks/useAuth";
+import Head from "next/head";
 
 const queryClient = new QueryClient();
 
@@ -18,30 +19,27 @@ export default function App({ Component, pageProps }: AppProps) {
   const isProtectedRoute = protectedRoutes.includes(router.pathname);
 
   return (
+    <><Head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </Head>
     <ThemeProvider
       attribute="class"
-      defaultTheme="system"
+      defaultTheme="dark"
       enableSystem
       disableTransitionOnChange
     >
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-grow">
-              {isProtectedRoute ? (
-                <ProtectedRoute>
-                  <Component {...pageProps} />
-                </ProtectedRoute>
-              ) : (
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-grow">
                 <Component {...pageProps} />
-              )}
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+              </main>
+              <Footer />
+            </div>
+            <Toaster />
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider></>
   );
 }
