@@ -1,5 +1,31 @@
-import { LoginForm } from "@/modules/auth/components/LoginForm";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import api from "@/lib/axios";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import Link from "next/link";
+import { LoginForm } from "@/modules/auth/components/LoginForm";
+
+const formSchema = z.object({
+  email: z.string().email({
+    message: "Invalid email address.",
+  }),
+  password: z.string().min(1, {
+    message: "Password is required.",
+  }),
+});
 
 export default function LoginPage() {
   return (

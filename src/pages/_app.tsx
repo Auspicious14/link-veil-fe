@@ -1,15 +1,23 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { QueryClientProvider } from "@tanstack/react-query";
-import queryClient from "@/lib/react-query";
+import { useRouter } from "next/router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
+import ProtectedRoute from "@/components/layout/ProtectedRoute";
 import { AuthProvider } from "@/hooks/useAuth";
 import Head from "next/head";
 
+const queryClient = new QueryClient();
+
+const protectedRoutes = ["/dashboard", "/create"];
+
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const isProtectedRoute = protectedRoutes.includes(router.pathname);
+
   return (
     <><Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />

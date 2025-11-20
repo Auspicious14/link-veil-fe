@@ -21,7 +21,6 @@ const backgroundStyle = {
     backgroundPosition: 'center',
   }
 
-export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] text-center px-16 max-md:px-5 max-sm:px-2">
       <section 

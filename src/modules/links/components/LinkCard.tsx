@@ -36,14 +36,14 @@ export function LinkCard({ link }: LinkCardProps) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    // Use fullUrl from backend if available, otherwise construct from shortId/shortUrl
+    // Use fullUrl from backend if available, otherwise construct from shortId
     if (link.fullUrl) {
       setShortUrl(link.fullUrl);
     } else {
-      const shortUrlParam = link.shortId || link.shortUrl;
+      const shortUrlParam = link.shortId;
       setShortUrl(`${window.location.origin}/link/${shortUrlParam}`);
     }
-  }, [link.shortId, link.shortUrl, link.fullUrl]);
+  }, [link.shortId, link.fullUrl]);
 
   const copyToClipboard = () => {
     if (!shortUrl) return;
@@ -70,12 +70,12 @@ export function LinkCard({ link }: LinkCardProps) {
         <CardTitle>{link.title}</CardTitle>
         <CardDescription>
           <a
-            href={link.destinationUrl || link.url}
+            href={link.fullUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:underline"
           >
-            {link.destinationUrl || link.url}
+            {link.fullUrl}
           </a>
         </CardDescription>
       </CardHeader>
@@ -98,10 +98,6 @@ export function LinkCard({ link }: LinkCardProps) {
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <span>{link.pendingRequestCount || 0} Pending Requests</span>
-          </div>
-          <div className="flex items-center gap-2">
             <BarChart className="h-4 w-4 text-muted-foreground" />
             <span>{link.clickCount} Total Clicks</span>
           </div>
@@ -113,11 +109,11 @@ export function LinkCard({ link }: LinkCardProps) {
             <Share2 className="mr-2 h-4 w-4" /> Share
           </Button>
         </ShareModal>
-        <Button variant="outline" asChild>
+        {/* <Button variant="outline" asChild>
           <Link href={`/manage/${link._id}`}>
             <Settings className="mr-2 h-4 w-4" /> Manage
           </Link>
-        </Button>
+        </Button> */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive">

@@ -1,10 +1,35 @@
+import { deleteCookie, getCookie } from "@/helper";
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
-  headers: {
-    "Content-Type": "application/json",
-  },
+const axiosInstance = axios.create({
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api` || "http://localhost:3000",
 });
 
-export default api;
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = getCookie("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      deleteCookie("token", 1);
+      // We can't use useRouter here, so we'll redirect from the component
+      // that made the request.
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;

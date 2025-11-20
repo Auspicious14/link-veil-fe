@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { useAuth } from "@/hooks/useAuth";
 import { Button } from "../ui/button";
+import Image from "next/image";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Navbar() {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
 
   return (
     <nav className="border-b supports-[backdrop-filter]:bg-background/60">
@@ -14,15 +15,12 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              <span className="text-sm text-muted-foreground">
-                Welcome, {user?.name}
-              </span>
-              <Link
-                href="/dashboard"
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-              >
-                Dashboard
-              </Link>
+              {/* <Button asChild variant="ghost">
+                <Link href="/dashboard">Dashboard</Link>
+              </Button> */}
+              <Button asChild>
+                <Link href="/create">Create Link</Link>
+              </Button>
               <Button variant="outline" size="sm" onClick={logout}>
                 Logout
               </Button>

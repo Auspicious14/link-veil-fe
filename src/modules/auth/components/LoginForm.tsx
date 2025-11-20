@@ -42,7 +42,7 @@ export function LoginForm() {
     },
     onSuccess: (data) => {
       toast.success("Logged in successfully!");
-      login(data.data.token, data.data.user);
+      login(data.data.token, data.data.data);
       router.push("/dashboard");
     },
     onError: (error: any) => {
@@ -58,48 +58,57 @@ export function LoginForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  type="email"
-                  placeholder="john.doe@example.com"
-                  {...field}
-                  disabled={mutation.isPending}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
-                  {...field}
-                  disabled={mutation.isPending}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full" disabled={mutation.isPending}>
-          {mutation.isPending ? "Logging in..." : "Log In"}
-        </Button>
-      </form>
-    </Form>
+    <div>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6 w-full px-4 flex flex-col justify-center"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="john.doe@example.com"
+                    {...field}
+                    disabled={mutation.isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    {...field}
+                    disabled={mutation.isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? "Logging in..." : "Log In"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }
